@@ -1,0 +1,25 @@
+;=====================================================================
+; 接続情報
+HOSTADDR = 'ipアドレス'
+USERNAME = 'ユーザ名'
+PASSWORD = 'パスワード'
+KEYFILE  = 'keyファイルパス'
+
+;;ssh 接続   →connect 'ipアドレス:ポート番号 /ssh [/2] /auth=password /user=ユーザ名 /passwd=パスワード'
+;;秘密鍵接続 →connect 'ipアドレス:ポート番号 /ssh /2 /auth=publickey /user=ユーザ名 /passwd=パスワード'
+
+;=====================================================================
+
+
+;; コマンドオプション組立て
+COMMAND = HOSTADDR
+strconcat COMMAND ':2038 /ssh /2 /auth=publickey /user='
+strconcat COMMAND USERNAME
+strconcat COMMAND ' /passwd='
+strconcat COMMAND PASSWORD
+strconcat COMMAND ' /keyfile='
+strconcat COMMAND KEYFILE
+
+connect COMMAND
+
+end
