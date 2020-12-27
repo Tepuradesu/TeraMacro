@@ -1,25 +1,90 @@
 ;=====================================================================
 ; 接続情報
-HOSTADDR = 'ipアドレス'
+HOSTADDR = ' '
+PORTNUM  = ':'
 USERNAME = 'ユーザ名'
 PASSWORD = 'パスワード'
 KEYFILE  = 'keyファイルパス'
+PASSFILE = 'パスワード保存パス'
+
+;;自動ログ取得設定の場合不要
+;;LOGSPATH = 'C:\teramacro\'
+
 
 ;;ssh 接続   →connect 'ipアドレス:ポート番号 /ssh [/2] /auth=password /user=ユーザ名 /passwd=パスワード'
 ;;秘密鍵接続 →connect 'ipアドレス:ポート番号 /ssh /2 /auth=publickey /user=ユーザ名 /passwd=パスワード'
 
 ;=====================================================================
 
+; パスワード取得
+getpassword PASSFILE USERNAME PASSWORD
+
+;接続先環境選択
+strdim env 10
+env[0] = 'IT1環境' 
+env[1] = 'IT2環境' 
+env[2] = 'IT3環境'
+env[3] = 'IT4環境'
+env[4] = 'IT5環境'
+env[5] = 'IT6環境'
+env[6] = 'IT7環境'
+env[7] = 'IT8環境'
+env[8] = 'IT9環境'
+env[9] = 'GIJI環境'
+
+listbox '接続先を選択してください。' '環境選択' env
+
+if result = 0 then
+ HOSTADDR = ''
+elseif result = 1 then
+ HOSTADDR = ''
+elseif result = 2 then
+ HOSTADDR = ''
+elseif result = 3 then
+ HOSTADDR = ''
+elseif result = 4 then
+ HOSTADDR = ''
+elseif result = 5 then
+ HOSTADDR = ''
+elseif result = 6 then
+ HOSTADDR = ''
+elseif result = 7 then
+ HOSTADDR = ''
+elseif result = 8 then
+ HOSTADDR = ''
+elseif result = 9 then
+ HOSTADDR = ''
+else
+ ;;例外処理
+ end
+endif
 
 ;; コマンドオプション組立て
 COMMAND = HOSTADDR
-strconcat COMMAND ':2038 /ssh /2 /auth=publickey /user='
+strconcat COMMAND PORTNUM
+strconcat COMMAND ' /ssh /2 /auth=publickey /user='
 strconcat COMMAND USERNAME
 strconcat COMMAND ' /passwd='
 strconcat COMMAND PASSWORD
 strconcat COMMAND ' /keyfile='
 strconcat COMMAND KEYFILE
 
+
+;;接続開始
 connect COMMAND
 
+;;接続判定1（接続出来ない場合はメッセージを表示しマクロ終了） 
+if result <> 2 then 
+  messagebox 'It could not be connected.' 'Connection Error' 
+  end 
+endif
+
+;;接続判定2（接続して10秒以内にプロンプトが表示されない場合もマクロ終了） 
+timeout = 10 
+wait '$' '#'
+if result = 0 then 
+  end 
+endif
+
+;;マクロ終了
 end
